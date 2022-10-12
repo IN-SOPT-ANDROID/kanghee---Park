@@ -32,7 +32,7 @@ class LoginActivity :AppCompatActivity(){
         }
         binding.btnLogin.setOnClickListener(){
             if((binding.etId.text.toString() == idData) && (binding.etPassword.text.toString() == pwData)){
-                val mIntent = Intent(this,MyPageActivity::class.java).apply {
+                val mIntent = Intent(this,HomeActivity::class.java).apply {
                     putExtra("ID", idData)
                     putExtra("MBTI", mbtiData)
                 }
