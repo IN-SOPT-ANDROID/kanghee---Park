@@ -1,9 +1,13 @@
-package org.sopt.sample
+package org.sopt.sample.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import org.sopt.sample.R
 import org.sopt.sample.databinding.ActivityHomeBinding
+import org.sopt.sample.fragment.GalleryFragment
+import org.sopt.sample.fragment.HomeFragment
+import org.sopt.sample.fragment.SearchFragment
 
 class HomeActivity: AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding

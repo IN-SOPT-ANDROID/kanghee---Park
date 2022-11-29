@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import org.sopt.sample.data.remote.ResponseUserDTO
 import org.sopt.sample.databinding.HeaderBinding
 import org.sopt.sample.databinding.LayoutGithubRepoBinding
 
@@ -12,7 +13,7 @@ class RecyclerAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     private val TYPE_LIST = 1
 
     private val inflater by lazy { LayoutInflater.from(context) }
-    private var repoList: List<RepoData> = emptyList()
+    private var repoList: List<ResponseUserDTO.UserData> = emptyList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_HEADER -> {
@@ -27,9 +28,6 @@ class RecyclerAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//        if(holder is RepoViewHolder){
-//            holder.onBind(repoList[position - 1])
-//        }
         when (holder) {
             is RepoViewHolder -> {
                 holder.onBind(repoList[position - 1])
@@ -42,7 +40,7 @@ class RecyclerAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         return repoList.size + 1
     }
 
-    fun setRepoList(repoList: List<RepoData>) {
+    fun setRepoList(repoList: List<ResponseUserDTO.UserData>) {
         this.repoList = repoList.toList()
         notifyDataSetChanged()
     }

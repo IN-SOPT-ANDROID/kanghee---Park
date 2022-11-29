@@ -1,4 +1,4 @@
-package org.sopt.sample
+package org.sopt.sample.activity
 
 import android.os.Bundle
 import android.util.Log
