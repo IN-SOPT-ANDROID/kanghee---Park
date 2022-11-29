@@ -1,6 +1,6 @@
 package org.sopt.sample.activity
 
-import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,12 +13,17 @@ import org.sopt.sample.databinding.ActivitySignUpBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Pattern
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var id: String
     private lateinit var pw: String
     private lateinit var name: String
+    private val idPattern = "^[a-z|A-Z|0-9]{6,10}$"
+    private val pwPattern = "^[a-z|A-Z|0-9|[@#$%&*?!]]{6,10}$"
+    val idCheck: Pattern = Pattern.compile(idPattern)
+    val pwCheck: Pattern = Pattern.compile(pwPattern)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,15 +75,35 @@ class SignUpActivity : AppCompatActivity() {
             id = binding.etId.text.toString()
             pw = binding.etPassword.text.toString()
             name = binding.etName.text.toString()
-            binding.btnSignup.isEnabled = id.isNotBlank() && pw.isNotBlank() && name.isNotBlank()
+            binding.btnSignup.isEnabled = idCheck.matcher(id).find() && pwCheck.matcher(pw).find() && name.isNotBlank()
+            binding.tvIdWarn.visibility = View.INVISIBLE
+            binding.tvPwWarn.visibility = View.INVISIBLE
+
+            checker()
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            binding.btnSignup.isEnabled = id.isNotBlank() && pw.isNotBlank() && name.isNotBlank()
+            checker()
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            binding.btnSignup.isEnabled = id.isNotBlank() && pw.isNotBlank() && name.isNotBlank()
+            checker()
+        }
+
+        private fun checker() {
+            binding.btnSignup.isEnabled = idCheck.matcher(id).find() && pwCheck.matcher(pw).find() && name.isNotBlank()
+            if(binding.btnSignup.isEnabled){
+                binding.btnSignup.setBackgroundColor(Color.parseColor("#003366"))
+            }
+            else{
+                binding.btnSignup.setBackgroundColor(Color.parseColor("#808080"))
+                if(!idCheck.matcher(id).find()&&id.isNotBlank()){
+                    binding.tvIdWarn.visibility = View.VISIBLE
+                }
+                if(!pwCheck.matcher(pw).find()&&pw.isNotBlank()){
+                    binding.tvPwWarn.visibility = View.VISIBLE
+                }
+            }
         }
     }
 }

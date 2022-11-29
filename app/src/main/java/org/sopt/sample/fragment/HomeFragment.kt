@@ -31,6 +31,7 @@ class HomeFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val adapter = RecyclerAdapter(requireContext())
         binding.rvRepos.adapter = adapter
+
         userService.userData().enqueue(object : Callback<ResponseUserDTO> {
             override fun onResponse(
                 call: Call<ResponseUserDTO>,
