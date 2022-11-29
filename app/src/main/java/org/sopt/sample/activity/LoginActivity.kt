@@ -25,6 +25,7 @@ class LoginActivity :AppCompatActivity(){
         binding.btnSignup.setOnClickListener(){
             startActivity(Intent(this, SignUpActivity::class.java))
         }
+
         binding.btnLogin.setOnClickListener(){
             var id = binding.etId.text.toString()
             var pw = binding.etPassword.text.toString()
@@ -32,24 +33,22 @@ class LoginActivity :AppCompatActivity(){
                 RequestSignInDTO(
                     id, pw
                 )
-            ).enqueue(object : Callback<ResponseSignInDTO>{
-                override fun onResponse(
-                    call: Call<ResponseSignInDTO>,
-                    response: Response<ResponseSignInDTO>
-                ) {if (response.isSuccessful) {
-
-                    startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
-                    Snackbar.make(binding.root, "로그인 성공", Snackbar.LENGTH_SHORT).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseSignInDTO>, t: Throwable) {
-                    Snackbar.make(binding.root,"에러 발생",Snackbar.LENGTH_SHORT).show()
-                    Log.e("LOGIN",t.message+"")
-                }
-
-            })
+            ).receive()
 
         }
+    }
+
+    fun <T> Call<T>.receive(){
+        this.enqueue(object : Callback<T>{
+            override fun onResponse(
+                call: Call<T>,
+                response: Response<T>
+            ) {if (response.isSuccessful) {
+                startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+            }}
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                Log.e("LOGIN",t.message+"")
+            }
+        })
     }
 }

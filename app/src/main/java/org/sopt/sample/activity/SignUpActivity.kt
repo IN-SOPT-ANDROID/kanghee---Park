@@ -1,5 +1,6 @@
 package org.sopt.sample.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,34 +16,22 @@ import retrofit2.Response
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
+    private lateinit var id: String
+    private lateinit var pw: String
+    private lateinit var name: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val signUpService: AuthService = ServicePool.authService
 
-        var id = binding.etId.text.toString()
-        var pw = binding.etPassword.text.toString()
-        var name = binding.etName.text.toString()
+        id = binding.etId.text.toString()
+        pw = binding.etPassword.text.toString()
+        name = binding.etName.text.toString()
         binding.btnSignup.isEnabled = false
 
-        val textWatcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                id = binding.etId.text.toString()
-                pw = binding.etPassword.text.toString()
-                name = binding.etName.text.toString()
-                binding.btnSignup.isEnabled = id != "" && pw != "" && name != ""
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnSignup.isEnabled = id != "" && pw != "" && name != ""
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnSignup.isEnabled = id != "" && pw != "" && name != ""
-            }
-        }
-
+        val textWatcher = tw()
         binding.etId.addTextChangedListener(textWatcher)
         binding.etPassword.addTextChangedListener(textWatcher)
         binding.etName.addTextChangedListener(textWatcher)
@@ -53,24 +42,46 @@ class SignUpActivity : AppCompatActivity() {
                 RequestSignUpDTO(
                     id, pw, name
                 )
-            ).enqueue(object : Callback<ResponseSignUpDTO> {
-                override fun onResponse(
-                    call: Call<ResponseSignUpDTO>,
-                    response: Response<ResponseSignUpDTO>
-                ) {
-                    if (response.isSuccessful) {
-                        Snackbar.make(binding.root, "회원가입 성공", Snackbar.LENGTH_SHORT).show()
-                        if (!isFinishing) finish()
-                    }
-                }
+            ).receive()
+        }
+    }
 
-                override fun onFailure(call: Call<ResponseSignUpDTO>, t: Throwable) {
-                    Snackbar.make(binding.root, "에러 발생", Snackbar.LENGTH_SHORT).show()
-                    Log.e("stellar", "fail")
+    fun <T> Call<T>.receive() {
+        this.enqueue(object : Callback<T> {
+            override fun onResponse(
+                call: Call<T>,
+                response: Response<T>
+            ) {
+                if (response.isSuccessful) {
+                    Snackbar.make(binding.root, "회원가입 성공", Snackbar.LENGTH_SHORT).show()
+                    if (!isFinishing) finish()
                 }
-            })
+            }
+
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                Snackbar.make(binding.root, "에러 발생", Snackbar.LENGTH_SHORT).show()
+                Log.e("stellar", "fail")
+            }
+        })
+    }
+
+    inner class tw : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            id = binding.etId.text.toString()
+            pw = binding.etPassword.text.toString()
+            name = binding.etName.text.toString()
+            binding.btnSignup.isEnabled = id.isNotBlank() && pw.isNotBlank() && name.isNotBlank()
         }
 
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            binding.btnSignup.isEnabled = id.isNotBlank() && pw.isNotBlank() && name.isNotBlank()
+        }
 
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            binding.btnSignup.isEnabled = id.isNotBlank() && pw.isNotBlank() && name.isNotBlank()
+        }
     }
 }
+
+
+
