@@ -13,20 +13,27 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginActivity :AppCompatActivity(){
+class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+    val loginService = ServicePool.authService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val loginService = ServicePool.authService
+        signUp()
+        login()
+    }
 
-        binding.btnSignup.setOnClickListener(){
+    private fun signUp() {
+        binding.btnSignup.setOnClickListener() {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
+    }
 
-        binding.btnLogin.setOnClickListener(){
+    private fun login() {
+        binding.btnLogin.setOnClickListener() {
             var id = binding.etId.text.toString()
             var pw = binding.etPassword.text.toString()
             loginService.signIn(
@@ -38,16 +45,19 @@ class LoginActivity :AppCompatActivity(){
         }
     }
 
-    fun <T> Call<T>.receive(){
-        this.enqueue(object : Callback<T>{
+    fun <T> Call<T>.receive() {
+        this.enqueue(object : Callback<T> {
             override fun onResponse(
                 call: Call<T>,
                 response: Response<T>
-            ) {if (response.isSuccessful) {
-                startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
-            }}
+            ) {
+                if (response.isSuccessful) {
+                    startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+                }
+            }
+
             override fun onFailure(call: Call<T>, t: Throwable) {
-                Log.e("LOGIN",t.message+"")
+                Log.e("LOGIN", t.message + "")
             }
         })
     }

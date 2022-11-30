@@ -14,6 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.regex.Pattern
+import kotlin.math.sign
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
@@ -24,23 +25,30 @@ class SignUpActivity : AppCompatActivity() {
     private val pwPattern = "^[a-z|A-Z|0-9|[@#$%&*?!]]{6,10}$"
     val idCheck: Pattern = Pattern.compile(idPattern)
     val pwCheck: Pattern = Pattern.compile(pwPattern)
+    val signUpService: AuthService = ServicePool.authService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val signUpService: AuthService = ServicePool.authService
 
         id = binding.etId.text.toString()
         pw = binding.etPassword.text.toString()
         name = binding.etName.text.toString()
         binding.btnSignup.isEnabled = false
 
+        watchEditText()
+        signUp()
+    }
+
+    fun watchEditText() {
         val textWatcher = tw()
         binding.etId.addTextChangedListener(textWatcher)
         binding.etPassword.addTextChangedListener(textWatcher)
         binding.etName.addTextChangedListener(textWatcher)
+    }
 
+    fun signUp() {
         binding.btnSignup.setOnClickListener() {
 
             signUpService.signUp(
@@ -75,7 +83,8 @@ class SignUpActivity : AppCompatActivity() {
             id = binding.etId.text.toString()
             pw = binding.etPassword.text.toString()
             name = binding.etName.text.toString()
-            binding.btnSignup.isEnabled = idCheck.matcher(id).find() && pwCheck.matcher(pw).find() && name.isNotBlank()
+            binding.btnSignup.isEnabled =
+                idCheck.matcher(id).find() && pwCheck.matcher(pw).find() && name.isNotBlank()
             binding.tvIdWarn.visibility = View.INVISIBLE
             binding.tvPwWarn.visibility = View.INVISIBLE
 
@@ -91,16 +100,16 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         private fun checker() {
-            binding.btnSignup.isEnabled = idCheck.matcher(id).find() && pwCheck.matcher(pw).find() && name.isNotBlank()
-            if(binding.btnSignup.isEnabled){
+            binding.btnSignup.isEnabled =
+                idCheck.matcher(id).find() && pwCheck.matcher(pw).find() && name.isNotBlank()
+            if (binding.btnSignup.isEnabled) {
                 binding.btnSignup.setBackgroundColor(Color.parseColor("#003366"))
-            }
-            else{
+            } else {
                 binding.btnSignup.setBackgroundColor(Color.parseColor("#808080"))
-                if(!idCheck.matcher(id).find()&&id.isNotBlank()){
+                if (!idCheck.matcher(id).find() && id.isNotBlank()) {
                     binding.tvIdWarn.visibility = View.VISIBLE
                 }
-                if(!pwCheck.matcher(pw).find()&&pw.isNotBlank()){
+                if (!pwCheck.matcher(pw).find() && pw.isNotBlank()) {
                     binding.tvPwWarn.visibility = View.VISIBLE
                 }
             }
