@@ -20,7 +20,7 @@ class HomeViewModel: ViewModel() {
         loadUsers()
     }
 
-    fun loadUsers(){
+    private fun loadUsers(){
         userService.userData().enqueue(object : Callback<ResponseUserDTO> {
             override fun onResponse(
                 call: Call<ResponseUserDTO>,

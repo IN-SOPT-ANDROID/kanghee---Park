@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import org.sopt.sample.data.remote.RequestSignInDTO
-import org.sopt.sample.data.remote.ResponseSignInDTO
 import org.sopt.sample.data.remote.ServicePool
 import org.sopt.sample.databinding.ActivityLoginBinding
 import retrofit2.Call
@@ -45,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun <T> Call<T>.receive() {
+    private fun <T> Call<T>.receive() {
         this.enqueue(object : Callback<T> {
             override fun onResponse(
                 call: Call<T>,
