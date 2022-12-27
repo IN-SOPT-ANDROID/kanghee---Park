@@ -1,8 +1,6 @@
 package org.sopt.sample.activity
 
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import org.sopt.sample.databinding.ActivityMypageBinding
 
