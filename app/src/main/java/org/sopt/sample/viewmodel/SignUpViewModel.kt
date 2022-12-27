@@ -17,18 +17,21 @@ class SignUpViewModel : ViewModel() {
     private val _signUpData: MutableLiveData<ResponseSignUpDTO> = MutableLiveData()
     val signUpData: LiveData<ResponseSignUpDTO> get() = _signUpData
     private val signUpService: AuthService = ServicePool.authService
-//    private val idPattern = "^[a-z|A-Z|0-9]{6,10}"
-//    private val pwPattern = "^[a-z|A-Z|0-9|[@#$%&*?!]]{6,10}"
-//    private val namePattern = ".*"
-//    private val idCheck: Pattern = Pattern.compile(idPattern)
-//    private val pwCheck: Pattern = Pattern.compile(pwPattern)
-//    private val nameCheck: Pattern = Pattern.compile(namePattern)
-    val idText = MutableLiveData<String>()
-    val pwText = MutableLiveData<String>()
-    val nameText = MutableLiveData<String>()
-//    var btnEnabled: Boolean = false
-//    var idWarn: Boolean = false
-//    var pwWarn: Boolean = false
+
+    val idText = MutableLiveData<String>("")
+    val pwText = MutableLiveData<String>("")
+    val nameText = MutableLiveData<String>("")
+
+    private val idPattern = "^[a-z|A-Z|0-9]{6,10}$"
+    private val pwPattern = "^[a-z|A-Z|0-9|[@#$%&*?!]]{6,10}$"
+    private val namePattern = "^..*$"
+
+    private val idCheck: Pattern = Pattern.compile(idPattern)
+    private val pwCheck: Pattern = Pattern.compile(pwPattern)
+    private val nameCheck: Pattern = Pattern.compile(namePattern)
+
+    private val _btnEnabled = MutableLiveData<Boolean>()
+    val btnEnabled: LiveData<Boolean> = _btnEnabled
 
     fun signUp() {
         signUpService.signUp(
@@ -50,18 +53,33 @@ class SignUpViewModel : ViewModel() {
         })
     }
 
-//    private fun signUpchecker() {
-//        btnEnabled = idCheck.matcher(idText.toString()).find() && pwCheck.matcher(pwText.toString())
-//            .find() && nameCheck.matcher(nameText.toString()).find()
-//        if (btnEnabled) {
-//        } else {
-//            if (!idCheck.matcher(idText.toString()).find()) {
-//                idWarn = true
-//            }
-//            if (!pwCheck.matcher(pwText.toString()).find()) {
-//                pwWarn = true
-//            }
-//        }
-//    }
+    fun btnEnabledChecker() {
+        _btnEnabled.value =
+            idCheck.matcher(idText.value).find() && pwCheck.matcher(pwText.value)
+                .find() && nameCheck.matcher(nameText.value).find()
+//        Log.e(
+//            "kang",
+//            "${idText.value}, ${
+//                idCheck.matcher(idText.value).find()
+//            } ,${pwText.value}, ${
+//                pwCheck.matcher(pwText.value).find()
+//            }, ${nameText.value}, ${
+//                nameCheck.matcher(nameText.value).find()
+//            },btn ${btnEnabled.value}"
+//        )
+    }
+
+    fun idWarningChecker(): Boolean {
+        return idCheck.matcher(idText.value).find() || (idText.value == "")
+    }
+
+    fun pwWarningChecker(): Boolean {
+        return pwCheck.matcher(pwText.value).find() || (pwText.value == "")
+    }
+
+    fun nameWarningChecker(): Boolean {
+        return nameCheck.matcher(nameText.value).find() || (nameText.value == "")
+    }
+
 
 }

@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="viewModel"
+            name="vm"
             type="org.sopt.sample.viewmodel.SignUpViewModel" />
 
     </data>
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="아이디를 입력하세요"
-            android:text="@={viewModel.idText}"
+            android:text="@={vm.idText}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_id_warn"
@@ -82,7 +82,7 @@
             android:text="*비밀번호 형식이 올바르지 않습니다."
             android:textColor="@color/red"
             android:textSize="15sp"
-            android:visibility="invisible"
+            android:visibility = "invisible"
             app:layout_constraintBottom_toTopOf="@+id/et_password"
             app:layout_constraintStart_toEndOf="@+id/tv_password"
             app:layout_constraintTop_toBottomOf="@+id/et_id"
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
             android:hint="비밀번호를 입력하세요"
-            android:text="@={viewModel.pwText}"
+            android:text="@={vm.pwText}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_password"
@@ -131,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
             android:hint="이름을 입력하세요"
-            android:text="@={viewModel.nameText}"
+            android:text="@={vm.nameText}"
             app:layout_constraintBottom_toTopOf="@+id/btn_signup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -144,7 +144,8 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/gray"
             android:text="SIGN UP"
-            android:onClick="@{() -> viewModel.signUp()}"
+            android:onClick="@{() -> vm.signUp()}"
+            android:enabled="@{vm.btnEnabled}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
